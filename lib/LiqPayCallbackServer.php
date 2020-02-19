@@ -15,13 +15,13 @@ class LiqPayCallbackServer
 	/** @var LoggerInterface */
 	private $logger;
 	/** @var callable */
-	private $settings_accessor;
+	private $auth_params_accessor;
 
-	public function __construct(LiqPayNotificationHandler $handler, LoggerInterface $logger, $settings_accessor)
+	public function __construct(LiqPayNotificationHandler $handler, LoggerInterface $logger, $auth_params_accessor)
 	{
 		$this->handler = $handler;
 		$this->logger = $logger;
-		$this->settings_accessor = $settings_accessor;
+		$this->auth_params_accessor = $auth_params_accessor;
 	}
 
 	/**
@@ -45,10 +45,6 @@ class LiqPayCallbackServer
 
 	public function processDataAndSignature(string $data_64, string $signature_64) : array
 	{
-		if (!$this->signValid($data_64, $signature_64)) {
-			$this->logger->error('Invalid signed request');
-			return [self::STATUS_BAD_REQUEST, 'Invalid sign'];
-		}
 
 		$json_req = \base64_decode($data_64);
 		$structured_req = \json_decode($json_req, true);
@@ -58,7 +54,29 @@ class LiqPayCallbackServer
 		}
 
 		try{
-			$this->processNotification($structured_req);
+			$req_to_log = \json_encode($structured_req, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+				?? \print_r($structured_req, true);
+			$this->logger->info('Notification request: '.$req_to_log);
+
+			$notification = CallbackNotification::deserialize($structured_req);
+
+			/** @var MerchantAuthParams $auth_params */
+			$auth_params = ($this->auth_params_accessor)($notification->getOrderId());
+
+			if ($auth_params->getPublicKey() !== $notification->getPublicKey()) {
+				$this->logger->error('Public key does not match');
+				return [self::STATUS_BAD_REQUEST, 'Public key does not match'];
+			}
+
+			$private_key = $auth_params->getPrivateKey();
+			if (!$this->signValid($data_64, $signature_64, $private_key)) {
+				$this->logger->error('Invalid notification sign');
+				return [self::STATUS_BAD_REQUEST, 'Invalid sign'];
+			}
+
+			$this->handler->handleNotification($notification);
+
+			$this->logger->info('Notification accepted');
 		}catch (\InvalidArgumentException $e){
 			$this->logger->error($e->getMessage());
 			return [self::STATUS_BAD_REQUEST, $e->getMessage()];
@@ -67,25 +85,11 @@ class LiqPayCallbackServer
 		return [self::STATUS_OK, ''];
 	}
 
-	private function signValid(string $data_64, string $signature_64) : bool
+	private function signValid(string $data_64, string $signature_64, string $private_key) : bool
 	{
-		/** @var LiqPayApiSettings $settings */
-		$settings = ($this->settings_accessor)();
 		$signature_bin = \base64_decode($signature_64);
-		$private_key = $settings->getPrivateKey();
 		$sign_sha1 = \sha1($private_key.$data_64.$private_key, true);
 		return $sign_sha1 === $signature_bin;
-	}
-
-	private function processNotification(array $request) : void
-	{
-		$req_to_log = \json_encode($request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?? \print_r($request, true);
-		$this->logger->info('Notification request: '.$req_to_log);
-
-		$notification = LiqPayNotification::deserialize($request);
-		$this->handler->handleNotification($notification);
-
-		$this->logger->info('Notification accepted');
 	}
 
 }

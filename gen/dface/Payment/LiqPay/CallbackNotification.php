@@ -4,7 +4,7 @@
 
 namespace dface\Payment\LiqPay;
 
-class LiqPayNotification implements \JsonSerializable {
+class CallbackNotification implements \JsonSerializable {
 
 	/** @var string */
 	private $status;
@@ -862,7 +862,7 @@ class LiqPayNotification implements \JsonSerializable {
 	 * @return self
 	 * @throws \InvalidArgumentException
 	 */
-	public static function deserialize(array $arr) : LiqPayNotification {
+	public static function deserialize(array $arr) : CallbackNotification {
 		if(\array_key_exists('status', $arr)){
 			$status = $arr['status'];
 		}else{

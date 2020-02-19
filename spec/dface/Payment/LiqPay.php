@@ -6,19 +6,17 @@ namespace dface\Payment\LiqPay;
 
 return [
 
-	'LiqPayApiSettings' => [
-		'api_url' => ['type' => 'string', 'default' => null],
+	'MerchantAuthParams' => [
 		'public_key' => ['type' => 'string', 'default' => null],
 		'private_key' => ['type' => 'string', 'default' => null],
 	],
 
 	'PaymentRequest' => [
-		'version' => ['type' => 'float'],
-		'action' => ['type' => 'string'],
-		'amount' => ['type' => 'float'],
-		'currency' => ['type' => 'string'],
-		'description' => ['type' => 'string'],
-		'order_id' => ['type' => 'string'],
+		'action' => ['type' => 'string', 'with' => true],
+		'amount' => ['type' => 'float', 'with' => true],
+		'currency' => ['type' => 'string', 'with' => true],
+		'description' => ['type' => 'string', 'with' => true],
+		'order_id' => ['type' => 'string', 'with' => true],
 		'language' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 		'ip' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 		'expired_date' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
@@ -92,10 +90,8 @@ return [
 	],
 
 	'RefundRequest' => [
-		'version' => ['type' => 'float'],
-		'action' => ['type' => 'string'],
-		'order_id' => ['type' => 'string'],
-		'amount' => ['type' => 'float'],
+		'order_id' => ['type' => 'string', 'with' => true],
+		'amount' => ['type' => 'float', 'with' => true],
 	],
 
 	'RefundResponse' => [
@@ -106,9 +102,7 @@ return [
 	],
 
 	'StatusRequest' => [
-		'version' => ['type' => 'float'],
-		'action' => ['type' => 'string'],
-		'order_id' => ['type' => 'string'],
+		'order_id' => ['type' => 'string', 'with' => true],
 	],
 
 	'StatusResponse' => [
@@ -159,7 +153,7 @@ return [
 		'version' => ['type' => 'float', 'default' => null, 'silent' => true],
 	],
 
-	'LiqPayNotification' => [
+	'CallbackNotification' => [
 		'status' => ['type' => 'string'],
 		'order_id' => ['type' => 'string'],
 		'acq_id' => ['type' => 'float', 'default' => null, 'silent' => true],

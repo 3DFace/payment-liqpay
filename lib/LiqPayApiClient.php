@@ -11,8 +11,10 @@ use function GuzzleHttp\Psr7\stream_for;
 class LiqPayApiClient
 {
 
-	/** @var callable */
-	private $settings_accessor;
+	/** @var string */
+	private $api_url;
+	/** @var float */
+	private $version;
 	/** @var ClientInterface */
 	private $httpClient;
 	/** @var ServerRequestFactoryInterface */
@@ -20,43 +22,38 @@ class LiqPayApiClient
 	/** @var LoggerInterface */
 	private $logger;
 
-	/**
-	 * @param callable $settings_accessor
-	 * @param ClientInterface $httpClient
-	 * @param ServerRequestFactoryInterface $requestFactory
-	 * @param LoggerInterface $logger
-	 */
 	public function __construct(
-		$settings_accessor,
+		string $api_url,
+		float $version,
 		ClientInterface $httpClient,
 		ServerRequestFactoryInterface $requestFactory,
 		LoggerInterface $logger
 	) {
+		$this->api_url = $api_url;
+		$this->version = $version;
 		$this->httpClient = $httpClient;
 		$this->requestFactory = $requestFactory;
-		$this->settings_accessor = $settings_accessor;
 		$this->logger = $logger;
 	}
 
 	/**
 	 * @param string $request_name
 	 * @param array $data_arr
+	 * @param MerchantAuthParams $auth
 	 * @return array response
 	 * @throws LiqPayError
 	 * @throws LiqPayHttpError
 	 */
-	public function callApi(string $request_name, array $data_arr) : array
+	public function callApi(string $request_name, array $data_arr, MerchantAuthParams $auth) : array
 	{
-		/** @var LiqPayApiSettings $settings */
-		$settings = ($this->settings_accessor)();
+		$data_arr['version'] = $this->version;
+		$data_arr['public_key'] = $auth->getPublicKey();
 
-		$data_arr['public_key'] = $settings->getPublicKey();
-
-		$private_key = $settings->getPrivateKey();
+		$private_key = $auth->getPrivateKey();
 		$request_arr = $this->buildDataAndSignature($data_arr, $private_key);
 
 		$request_param_str = \http_build_query($request_arr);
-		$request = $this->requestFactory->createServerRequest('POST', $settings->getApiUrl());
+		$request = $this->requestFactory->createServerRequest('POST', $this->api_url);
 		$request = $request
 			->withHeader('Content-Type', 'application/x-www-form-urlencoded')
 			->withBody(stream_for($request_param_str));
@@ -101,14 +98,14 @@ class LiqPayApiClient
 
 	/**
 	 * @param array $data_arr
+	 * @param MerchantAuthParams $auth
 	 * @return array
 	 */
-	public function buildRequest(array $data_arr) : array
+	public function buildRequest(array $data_arr, MerchantAuthParams $auth) : array
 	{
-		/** @var LiqPayApiSettings $settings */
-		$settings = ($this->settings_accessor)();
-		$data_arr['public_key'] = $settings->getPublicKey();
-		$private_key = $settings->getPrivateKey();
+		$data_arr['version'] = $this->version;
+		$data_arr['public_key'] = $auth->getPublicKey();
+		$private_key = $auth->getPrivateKey();
 		return $this->buildDataAndSignature($data_arr, $private_key);
 	}
 

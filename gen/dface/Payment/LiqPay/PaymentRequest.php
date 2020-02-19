@@ -6,8 +6,6 @@ namespace dface\Payment\LiqPay;
 
 class PaymentRequest implements \JsonSerializable {
 
-	/** @var float */
-	private $version;
 	/** @var string */
 	private $action;
 	/** @var float */
@@ -76,7 +74,6 @@ class PaymentRequest implements \JsonSerializable {
 	private $result_url;
 
 	public function __construct(
-		float $version,
 		string $action,
 		float $amount,
 		string $currency,
@@ -111,7 +108,6 @@ class PaymentRequest implements \JsonSerializable {
 		?string $product_url = null,
 		?string $result_url = null
 	){
-		$this->version = $version;
 		$this->action = $action;
 		$this->amount = $amount;
 		$this->currency = $currency;
@@ -145,13 +141,6 @@ class PaymentRequest implements \JsonSerializable {
 		$this->product_name = $product_name;
 		$this->product_url = $product_url;
 		$this->result_url = $result_url;
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getVersion() : float {
-		return $this->version;
 	}
 
 	/**
@@ -383,6 +372,56 @@ class PaymentRequest implements \JsonSerializable {
 	 */
 	public function getResultUrl() : ?string {
 		return $this->result_url;
+	}
+
+	/**
+	 * @param string $val
+	 * @return self
+	 */
+	public function withAction(string $val) : self {
+		$clone = clone $this;
+		$clone->action = $val;
+		return $clone;
+	}
+
+	/**
+	 * @param float $val
+	 * @return self
+	 */
+	public function withAmount(float $val) : self {
+		$clone = clone $this;
+		$clone->amount = $val;
+		return $clone;
+	}
+
+	/**
+	 * @param string $val
+	 * @return self
+	 */
+	public function withCurrency(string $val) : self {
+		$clone = clone $this;
+		$clone->currency = $val;
+		return $clone;
+	}
+
+	/**
+	 * @param string $val
+	 * @return self
+	 */
+	public function withDescription(string $val) : self {
+		$clone = clone $this;
+		$clone->description = $val;
+		return $clone;
+	}
+
+	/**
+	 * @param string $val
+	 * @return self
+	 */
+	public function withOrderId(string $val) : self {
+		$clone = clone $this;
+		$clone->order_id = $val;
+		return $clone;
 	}
 
 	/**
@@ -662,8 +701,6 @@ class PaymentRequest implements \JsonSerializable {
 
 		$result = [];
 
-		$result['version'] = $this->version;
-
 		$result['action'] = $this->action;
 
 		$result['amount'] = $this->amount;
@@ -797,13 +834,6 @@ class PaymentRequest implements \JsonSerializable {
 	 * @throws \InvalidArgumentException
 	 */
 	public static function deserialize(array $arr) : PaymentRequest {
-		if(\array_key_exists('version', $arr)){
-			$version = $arr['version'];
-		}else{
-			throw new \InvalidArgumentException("Property 'version' not specified");
-		}
-		$version = $version !== null ? (float)$version : null;
-
 		if(\array_key_exists('action', $arr)){
 			$action = $arr['action'];
 		}else{
@@ -1015,7 +1045,6 @@ class PaymentRequest implements \JsonSerializable {
 		$result_url = $result_url !== null ? (string)$result_url : null;
 
 		return new static(
-			$version,
 			$action,
 			$amount,
 			$currency,

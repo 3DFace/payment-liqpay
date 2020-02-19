@@ -6,39 +6,14 @@ namespace dface\Payment\LiqPay;
 
 class RefundRequest implements \JsonSerializable {
 
-	/** @var float */
-	private $version;
-	/** @var string */
-	private $action;
 	/** @var string */
 	private $order_id;
 	/** @var float */
 	private $amount;
 
-	public function __construct(
-		float $version,
-		string $action,
-		string $order_id,
-		float $amount
-	){
-		$this->version = $version;
-		$this->action = $action;
+	public function __construct(string $order_id, float $amount){
 		$this->order_id = $order_id;
 		$this->amount = $amount;
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getVersion() : float {
-		return $this->version;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getAction() : string {
-		return $this->action;
 	}
 
 	/**
@@ -56,15 +31,31 @@ class RefundRequest implements \JsonSerializable {
 	}
 
 	/**
+	 * @param string $val
+	 * @return self
+	 */
+	public function withOrderId(string $val) : self {
+		$clone = clone $this;
+		$clone->order_id = $val;
+		return $clone;
+	}
+
+	/**
+	 * @param float $val
+	 * @return self
+	 */
+	public function withAmount(float $val) : self {
+		$clone = clone $this;
+		$clone->amount = $val;
+		return $clone;
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function jsonSerialize(){
 
 		$result = [];
-
-		$result['version'] = $this->version;
-
-		$result['action'] = $this->action;
 
 		$result['order_id'] = $this->order_id;
 
@@ -79,20 +70,6 @@ class RefundRequest implements \JsonSerializable {
 	 * @throws \InvalidArgumentException
 	 */
 	public static function deserialize(array $arr) : RefundRequest {
-		if(\array_key_exists('version', $arr)){
-			$version = $arr['version'];
-		}else{
-			throw new \InvalidArgumentException("Property 'version' not specified");
-		}
-		$version = $version !== null ? (float)$version : null;
-
-		if(\array_key_exists('action', $arr)){
-			$action = $arr['action'];
-		}else{
-			throw new \InvalidArgumentException("Property 'action' not specified");
-		}
-		$action = $action !== null ? (string)$action : null;
-
 		if(\array_key_exists('order_id', $arr)){
 			$order_id = $arr['order_id'];
 		}else{
@@ -107,11 +84,7 @@ class RefundRequest implements \JsonSerializable {
 		}
 		$amount = $amount !== null ? (float)$amount : null;
 
-		return new static(
-			$version,
-			$action,
-			$order_id,
-			$amount);
+		return new static($order_id, $amount);
 	}
 
 }

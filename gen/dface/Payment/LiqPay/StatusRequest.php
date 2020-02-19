@@ -6,31 +6,11 @@ namespace dface\Payment\LiqPay;
 
 class StatusRequest implements \JsonSerializable {
 
-	/** @var float */
-	private $version;
-	/** @var string */
-	private $action;
 	/** @var string */
 	private $order_id;
 
-	public function __construct(float $version, string $action, string $order_id){
-		$this->version = $version;
-		$this->action = $action;
+	public function __construct(string $order_id){
 		$this->order_id = $order_id;
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getVersion() : float {
-		return $this->version;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getAction() : string {
-		return $this->action;
 	}
 
 	/**
@@ -41,15 +21,21 @@ class StatusRequest implements \JsonSerializable {
 	}
 
 	/**
+	 * @param string $val
+	 * @return self
+	 */
+	public function withOrderId(string $val) : self {
+		$clone = clone $this;
+		$clone->order_id = $val;
+		return $clone;
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function jsonSerialize(){
 
 		$result = [];
-
-		$result['version'] = $this->version;
-
-		$result['action'] = $this->action;
 
 		$result['order_id'] = $this->order_id;
 
@@ -62,20 +48,6 @@ class StatusRequest implements \JsonSerializable {
 	 * @throws \InvalidArgumentException
 	 */
 	public static function deserialize(array $arr) : StatusRequest {
-		if(\array_key_exists('version', $arr)){
-			$version = $arr['version'];
-		}else{
-			throw new \InvalidArgumentException("Property 'version' not specified");
-		}
-		$version = $version !== null ? (float)$version : null;
-
-		if(\array_key_exists('action', $arr)){
-			$action = $arr['action'];
-		}else{
-			throw new \InvalidArgumentException("Property 'action' not specified");
-		}
-		$action = $action !== null ? (string)$action : null;
-
 		if(\array_key_exists('order_id', $arr)){
 			$order_id = $arr['order_id'];
 		}else{
@@ -83,7 +55,7 @@ class StatusRequest implements \JsonSerializable {
 		}
 		$order_id = $order_id !== null ? (string)$order_id : null;
 
-		return new static($version, $action, $order_id);
+		return new static($order_id);
 	}
 
 }

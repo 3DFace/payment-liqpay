@@ -50,7 +50,7 @@ class LiqPayApiClient
 		$data_arr['public_key'] = $auth->getPublicKey();
 
 		$private_key = $auth->getPrivateKey();
-		$request_arr = $this->buildDataAndSignature($data_arr, $private_key);
+		$request_arr = self::buildDataAndSignature($data_arr, $private_key);
 
 		$request_param_str = \http_build_query($request_arr);
 		$request = $this->requestFactory->createServerRequest('POST', $this->api_url);
@@ -106,7 +106,7 @@ class LiqPayApiClient
 		$data_arr['version'] = $this->version;
 		$data_arr['public_key'] = $auth->getPublicKey();
 		$private_key = $auth->getPrivateKey();
-		return $this->buildDataAndSignature($data_arr, $private_key);
+		return self::buildDataAndSignature($data_arr, $private_key);
 	}
 
 	/**
@@ -114,7 +114,7 @@ class LiqPayApiClient
 	 * @param string $private_key
 	 * @return array
 	 */
-	private function buildDataAndSignature(array $request_arr, string $private_key) : array
+	public static function buildDataAndSignature(array $request_arr, string $private_key) : array
 	{
 		$request_json = \json_encode($request_arr, JSON_UNESCAPED_UNICODE);
 		if ($request_json === null) {
@@ -123,8 +123,7 @@ class LiqPayApiClient
 		}
 
 		$request_base64 = \base64_encode($request_json);
-		$sign_sha1 = \sha1($private_key.$request_base64.$private_key, true);
-		$sign_base64 = \base64_encode($sign_sha1);
+		$sign_base64 = LiqPaySign::makeSignature($request_base64, $private_key);
 
 		return [
 			'data' => $request_base64,

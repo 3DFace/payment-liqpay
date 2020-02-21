@@ -18,10 +18,11 @@
 		"psr/http-server-middleware": "1.0.1"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^6.3",
+		"phpunit/phpunit": "^8.4",
 		"dface/code-gen": "dev-master",
 		"dface/tito": "dev-master",
-		"roave/security-advisories": "dev-master"
+		"roave/security-advisories": "dev-master",
+		"php-http/guzzle6-adapter": "^2.0"
 	},
 	"autoload": {
 		"psr-4": {
@@ -33,7 +34,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"dface\\IPayMasterPass\\": "tests/"
+			"dface\\Payment\\LiqPay\\": "test/"
 		}
 	}
 }

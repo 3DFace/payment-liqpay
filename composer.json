@@ -9,10 +9,9 @@
 		"email": "ponomarev@gmail.com"
 	}],
 	"require": {
-		"php": ">=7.1",
+		"php": ">=7.2",
 		"ext-json": "*",
 		"psr/log": "^1.0",
-		"guzzlehttp/guzzle": "^6.2",
 		"psr/http-client": "^1.0",
 		"psr/http-factory": "1.0.1",
 		"psr/http-server-middleware": "1.0.1"

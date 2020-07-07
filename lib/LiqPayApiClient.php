@@ -6,7 +6,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Log\LoggerInterface;
-use function GuzzleHttp\Psr7\stream_for;
+
 
 class LiqPayApiClient
 {
@@ -19,6 +19,8 @@ class LiqPayApiClient
 	private $httpClient;
 	/** @var ServerRequestFactoryInterface */
 	private $requestFactory;
+	/** @var callable */
+	private $stringStreamFactory;
 	/** @var LoggerInterface */
 	private $logger;
 
@@ -27,12 +29,14 @@ class LiqPayApiClient
 		float $version,
 		ClientInterface $httpClient,
 		ServerRequestFactoryInterface $requestFactory,
+		callable $stringStreamFactory,
 		LoggerInterface $logger
 	) {
 		$this->api_url = $api_url;
 		$this->version = $version;
 		$this->httpClient = $httpClient;
 		$this->requestFactory = $requestFactory;
+		$this->stringStreamFactory = $stringStreamFactory;
 		$this->logger = $logger;
 	}
 
@@ -54,9 +58,10 @@ class LiqPayApiClient
 
 		$request_param_str = \http_build_query($request_arr);
 		$request = $this->requestFactory->createServerRequest('POST', $this->api_url);
+		$body_stream = ($this->stringStreamFactory)($request_param_str);
 		$request = $request
 			->withHeader('Content-Type', 'application/x-www-form-urlencoded')
-			->withBody(stream_for($request_param_str));
+			->withBody($body_stream);
 
 		$this->logger->info($request_name.' request: '.\json_encode($data_arr,
 				JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));

@@ -23,7 +23,9 @@ class LiqPayApiClientTest extends TestCase
 		parent::setUp();
 		$this->httpClient = new TestHttpClient();
 		$reqFactory = new GuzzleServerRequestFactory();
-		$this->apiClient = new LiqPayApiClient('http://test.com', 3, $this->httpClient, $reqFactory, new NullLogger());
+		$this->apiClient = new LiqPayApiClient('http://test.com', 3, $this->httpClient, $reqFactory, static function ($str){
+			return stream_for($str);
+		}, new NullLogger());
 		$this->auth = new MerchantAuthParams('test_public', 'test_private');
 	}
 

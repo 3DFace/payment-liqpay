@@ -9,10 +9,8 @@ use Psr\Http\Message\ResponseInterface;
 class TestHttpClient implements ClientInterface
 {
 
-	/** @var RequestInterface */
-	private $request;
-	/** @var ResponseInterface */
-	private $response;
+	private RequestInterface $request;
+	private ResponseInterface $response;
 
 	public function setNextResponse(ResponseInterface $response) : void
 	{

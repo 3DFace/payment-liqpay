@@ -5,12 +5,10 @@ namespace dface\Payment\LiqPay;
 class LiqPayApi
 {
 
-	/** @var LiqPayApiClient */
-	private $api_client;
+	private LiqPayApiClient $api_client;
 	/** @var callable */
 	private $auth_params_accessor;
-	/** @var MerchantAuthParams */
-	private $auth_params;
+	private MerchantAuthParams $auth_params;
 
 	public function __construct(LiqPayApiClient $api_client, callable $auth_params_accessor)
 	{
@@ -21,6 +19,7 @@ class LiqPayApi
 	/**
 	 * @param PaymentRequest $request
 	 * @return array
+	 * @throws LiqPayError
 	 */
 	public function buildClientPaymentRequest(PaymentRequest $request) : array
 	{

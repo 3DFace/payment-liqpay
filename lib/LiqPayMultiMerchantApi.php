@@ -5,8 +5,7 @@ namespace dface\Payment\LiqPay;
 class LiqPayMultiMerchantApi
 {
 
-	/** @var LiqPayApiClient */
-	private $api_client;
+	private LiqPayApiClient $api_client;
 
 	public function __construct(LiqPayApiClient $api_client)
 	{
@@ -17,6 +16,7 @@ class LiqPayMultiMerchantApi
 	 * @param PaymentRequest $request
 	 * @param MerchantAuthParams $merchant_auth
 	 * @return array
+	 * @throws LiqPayError
 	 */
 	public function buildClientPaymentRequest(PaymentRequest $request, MerchantAuthParams $merchant_auth) : array
 	{

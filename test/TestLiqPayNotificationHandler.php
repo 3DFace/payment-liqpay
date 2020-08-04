@@ -5,8 +5,7 @@ namespace dface\Payment\LiqPay;
 class TestLiqPayNotificationHandler implements LiqPayNotificationHandler
 {
 
-	/** @var CallbackNotification|null */
-	private $notification;
+	private ?CallbackNotification $notification = null;
 
 	public function handleNotification(CallbackNotification $notification) : void
 	{

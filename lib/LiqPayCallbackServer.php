@@ -13,17 +13,15 @@ class LiqPayCallbackServer
 	private const STATUS_NOT_ACCEPTABLE = 406;
 	private const STATUS_INTERNAL_SERVER_ERROR = 500;
 
-	/** @var LiqPayNotificationHandler */
-	private $handler;
-	/** @var LoggerInterface */
-	private $logger;
+	private LiqPayNotificationHandler $handler;
+	private LoggerInterface $logger;
 	/** @var callable */
 	private $auth_params_accessor;
 
 	public function __construct(
 		LiqPayNotificationHandler $handler,
 		LoggerInterface $logger,
-		$auth_params_accessor
+		callable $auth_params_accessor
 	) {
 		$this->handler = $handler;
 		$this->logger = $logger;
@@ -51,13 +49,19 @@ class LiqPayCallbackServer
 	public function processDataAndSignature(string $data_64, string $signature_64) : array
 	{
 		$json_req = \base64_decode($data_64);
-		$structured_req = \json_decode($json_req, true);
-		if ($structured_req === null) {
+		try{
+			$structured_req = \json_decode($json_req, true, 512, JSON_THROW_ON_ERROR);
+		}catch (\JsonException $e){
 			return [self::STATUS_BAD_REQUEST, 'Can not decode data'];
 		}
 
-		$req_to_log = \json_encode($structured_req, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
-			?? \print_r($structured_req, true);
+		try{
+			$req_to_log = \json_encode($structured_req,
+				JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+		}catch (\JsonException $e){
+			$req_to_log = \print_r($structured_req, true);
+		}
+
 		$this->logger->info('Notification request: '.$req_to_log);
 
 		try{

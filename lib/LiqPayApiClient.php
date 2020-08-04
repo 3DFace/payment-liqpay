@@ -7,22 +7,16 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 
-
 class LiqPayApiClient
 {
 
-	/** @var string */
-	private $api_url;
-	/** @var float */
-	private $version;
-	/** @var ClientInterface */
-	private $httpClient;
-	/** @var ServerRequestFactoryInterface */
-	private $requestFactory;
+	private string $api_url;
+	private float $version;
+	private ClientInterface $httpClient;
+	private ServerRequestFactoryInterface $requestFactory;
 	/** @var callable */
 	private $stringStreamFactory;
-	/** @var LoggerInterface */
-	private $logger;
+	private LoggerInterface $logger;
 
 	public function __construct(
 		string $api_url,
@@ -52,10 +46,8 @@ class LiqPayApiClient
 	{
 		$data_arr['version'] = $this->version;
 		$data_arr['public_key'] = $auth->getPublicKey();
-
 		$private_key = $auth->getPrivateKey();
 		$request_arr = self::buildDataAndSignature($data_arr, $private_key);
-
 		$request_param_str = \http_build_query($request_arr);
 		$request = $this->requestFactory->createServerRequest('POST', $this->api_url);
 		$body_stream = ($this->stringStreamFactory)($request_param_str);
@@ -63,32 +55,45 @@ class LiqPayApiClient
 			->withHeader('Content-Type', 'application/x-www-form-urlencoded')
 			->withBody($body_stream);
 
-		$this->logger->info($request_name.' request: '.\json_encode($data_arr,
-				JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+		try{
+			$log_req = \json_encode($data_arr, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+		}catch (\JsonException $e){
+			$log_req = \print_r($data_arr, 1);
+		}
+		$this->logger->info($request_name.' request: '.$log_req);
 
 		try{
 			$response = $this->httpClient->sendRequest($request);
 			$response_str = $response->getBody()->getContents();
 
-			$response_arr = \json_decode($response_str, true);
-			if ($response_arr === null || !\is_array($response_arr)) {
+			try{
+				$response_arr = \json_decode($response_str, true, 512, JSON_THROW_ON_ERROR);
+			}catch (\JsonException $e){
+				$this->logger->error($request_name.' bad response: '.$response_str);
+				throw new LiqPayHttpError('Invalid response format');
+			}
+			if (!\is_array($response_arr)) {
 				$this->logger->error($request_name.' bad response: '.$response_str);
 				throw new LiqPayHttpError('Invalid response format');
 			}
 
-			$this->logger->info($request_name.' response: '.\json_encode($response_arr,
-					JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+			try{
+				$log_res = \json_encode($response_arr,
+					JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+			}catch (\JsonException $e){
+				$log_res = \print_r($request_arr, 1);
+			}
+
+			$this->logger->info($request_name.' response: '.$log_res);
 
 		}catch (ClientExceptionInterface $e){
 			$this->logger->error($request_name.' error: '.$e->getMessage(), [$e]);
 			throw new LiqPayHttpError($e->getMessage(), 0, $e);
 		}
-
 		$status = $response->getStatusCode();
 		if (!\in_array($status, [200, 202], true)) {
 			throw new LiqPayHttpError("Unexpected http status: $status");
 		}
-
 		$status = $response_arr['status'] ?? null;
 		if ($status === null || $status === 'error' || $status === 'failure') {
 			$err_msg = ($response_arr['err_code'] ?? $response_arr['code']);
@@ -97,7 +102,6 @@ class LiqPayApiClient
 			}
 			throw new LiqPayError($err_msg);
 		}
-
 		return $response_arr;
 	}
 
@@ -105,6 +109,7 @@ class LiqPayApiClient
 	 * @param array $data_arr
 	 * @param MerchantAuthParams $auth
 	 * @return array
+	 * @throws LiqPayError
 	 */
 	public function buildRequest(array $data_arr, MerchantAuthParams $auth) : array
 	{
@@ -118,13 +123,14 @@ class LiqPayApiClient
 	 * @param array $request_arr
 	 * @param string $private_key
 	 * @return array
+	 * @throws LiqPayError
 	 */
 	public static function buildDataAndSignature(array $request_arr, string $private_key) : array
 	{
-		$request_json = \json_encode($request_arr, JSON_UNESCAPED_UNICODE);
-		if ($request_json === null) {
-			$err_msg = \json_last_error_msg();
-			throw new \RuntimeException('Can not serialize request data:'.$err_msg);
+		try{
+			$request_json = \json_encode($request_arr, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+		}catch (\JsonException $e){
+			throw new LiqPayError('Can not serialize request data: '.$e->getMessage());
 		}
 
 		$request_base64 = \base64_encode($request_json);

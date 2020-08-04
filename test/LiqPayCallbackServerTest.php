@@ -8,10 +8,8 @@ use Psr\Log\NullLogger;
 class LiqPayCallbackServerTest extends TestCase
 {
 
-	/** @var LiqPayCallbackServer */
-	private $server;
-	/** @var TestLiqPayNotificationHandler */
-	private $handler;
+	private LiqPayCallbackServer $server;
+	private TestLiqPayNotificationHandler $handler;
 
 	protected function setUp() : void
 	{
@@ -35,13 +33,13 @@ class LiqPayCallbackServerTest extends TestCase
 
 		[$status] = $this->server->processPost($post);
 
-		$this->assertEquals(200, $status);
+		self::assertEquals(200, $status);
 
 		$n = $this->handler->getNotification();
-		$this->assertEquals('pay', $n->getAction());
-		$this->assertEquals('success', $n->getStatus());
-		$this->assertEquals('test_public', $n->getPublicKey());
-		$this->assertEquals('212250401b3145a1b30dc0d18f3b766f', $n->getOrderId());
+		self::assertEquals('pay', $n->getAction());
+		self::assertEquals('success', $n->getStatus());
+		self::assertEquals('test_public', $n->getPublicKey());
+		self::assertEquals('212250401b3145a1b30dc0d18f3b766f', $n->getOrderId());
 	}
 
 	public function testRejectedCauseInvalidSign() : void
@@ -56,10 +54,10 @@ class LiqPayCallbackServerTest extends TestCase
 		$post['signature'] = 'asd';
 
 		[$status] = $this->server->processPost($post);
-		$this->assertEquals(403, $status);
+		self::assertEquals(403, $status);
 
 		$n = $this->handler->getNotification();
-		$this->assertNull($n);
+		self::assertNull($n);
 	}
 
 }

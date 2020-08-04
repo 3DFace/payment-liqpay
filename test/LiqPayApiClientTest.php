@@ -11,21 +11,19 @@ use function GuzzleHttp\Psr7\stream_for;
 class LiqPayApiClientTest extends TestCase
 {
 
-	/** @var LiqPayApiClient */
-	private $apiClient;
-	/** @var TestHttpClient */
-	private $httpClient;
-	/** @var MerchantAuthParams */
-	private $auth;
+	private LiqPayApiClient $apiClient;
+	private TestHttpClient $httpClient;
+	private MerchantAuthParams $auth;
 
 	protected function setUp() : void
 	{
 		parent::setUp();
 		$this->httpClient = new TestHttpClient();
 		$reqFactory = new GuzzleServerRequestFactory();
-		$this->apiClient = new LiqPayApiClient('http://test.com', 3, $this->httpClient, $reqFactory, static function ($str){
-			return stream_for($str);
-		}, new NullLogger());
+		$this->apiClient = new LiqPayApiClient('http://test.com', 3, $this->httpClient, $reqFactory,
+			static function ($str) {
+				return stream_for($str);
+			}, new NullLogger());
 		$this->auth = new MerchantAuthParams('test_public', 'test_private');
 	}
 
@@ -50,23 +48,24 @@ class LiqPayApiClientTest extends TestCase
 		// check request was enriched with version and public key
 		$sent_req = $this->httpClient->getSentRequest();
 		$sent_data = $this->fetchDataFromRequest($sent_req);
-		$this->assertEquals(3, $sent_data['version']);
-		$this->assertEquals('test_public', $sent_data['public_key']);
+		self::assertEquals(3, $sent_data['version']);
+		self::assertEquals('test_public', $sent_data['public_key']);
 
 		// check expected response
-		$this->assertEquals('success', $res_arr['status']);
+		self::assertEquals('success', $res_arr['status']);
 	}
 
 	private function makeResponse($data) : Response
 	{
-		$res_body = \json_encode($data);
+		$res_body = \json_encode($data, JSON_THROW_ON_ERROR);
 		return new Response(200, [], stream_for($res_body));
 	}
 
-	private function fetchDataFromRequest(RequestInterface $sent_req){
+	private function fetchDataFromRequest(RequestInterface $sent_req)
+	{
 		$req_body = $sent_req->getBody()->getContents();
 		\parse_str($req_body, $req_params);
-		return \json_decode(\base64_decode($req_params['data']), true);
+		return \json_decode(\base64_decode($req_params['data']), true, 512, JSON_THROW_ON_ERROR);
 	}
 
 }

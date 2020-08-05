@@ -8,7 +8,7 @@ class LiqPayApi
 	private LiqPayApiClient $api_client;
 	/** @var callable */
 	private $auth_params_accessor;
-	private MerchantAuthParams $auth_params;
+	private ?MerchantAuthParams $auth_params = null;
 
 	public function __construct(LiqPayApiClient $api_client, callable $auth_params_accessor)
 	{

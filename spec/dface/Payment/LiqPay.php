@@ -20,10 +20,19 @@ return [
 		'language' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 		'ip' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 		'expired_date' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
-		'paytypes' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
-		'recurringbytoken' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
+		'pay_types' => [
+			'type' => 'string', 'default' => null, 'silent' => true, 'with' => true,
+			'read_as'=> 'paytypes', 'write_as'=> 'paytypes',
+		],
+		'recurring_by_token' => [
+			'type' => 'string', 'default' => null, 'silent' => true, 'with' => true,
+			'read_as'=> 'recurringbytoken', 'write_as'=> 'recurringbytoken',
+		],
 		'server_url' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
-		'verifycode' => ['type' => 'string', 'default' => null, 'silent' => true],
+		'verify_code' => [
+			'type' => 'string', 'default' => null, 'silent' => true,
+			'read_as'=> 'verifycode', 'write_as'=> 'verifycode',
+		],
 		'split_rules' => [
 			'type' => PaymentRequestSplitRule::class.'[]',
 			'default' => null,
@@ -115,9 +124,18 @@ return [
 		'amount_bonus' => ['type' => 'float', 'default' => 0.0, 'silent' => true],
 		'amount_credit' => ['type' => 'float', 'default' => null, 'silent' => true],
 		'amount_debit' => ['type' => 'float', 'default' => null, 'silent' => true],
-		'authcode_credit' => ['type' => 'string', 'default' => null, 'silent' => true],
-		'authcode_debit' => ['type' => 'string', 'default' => null, 'silent' => true],
-		'bonus_procent' => ['type' => 'float', 'default' => 0.0, 'silent' => true],
+		'auth_code_credit' => [
+			'type' => 'string', 'default' => null, 'silent' => true,
+			'read_as'=> 'authcode_credit', 'write_as'=> 'authcode_credit',
+		],
+		'auth_code_debit' => [
+			'type' => 'string', 'default' => null, 'silent' => true,
+			'read_as'=> 'authcode_debit', 'write_as'=> 'authcode_debit',
+		],
+		'bonus_percent' => [
+			'type' => 'float', 'default' => 0.0, 'silent' => true,
+			'read_as'=> 'bonus_procent', 'write_as'=> 'bonus_procent',
+		],
 		'bonus_type' => ['type' => 'string', 'default' => null, 'silent' => true],
 		'card_token' => ['type' => 'string', 'default' => null, 'silent' => true],
 		'commission_credit' => ['type' => 'float', 'default' => 0.0, 'silent' => true],
@@ -163,8 +181,14 @@ return [
 		'amount_bonus' => ['type' => 'float', 'default' => 0.0, 'silent' => true],
 		'amount_credit' => ['type' => 'float', 'default' => null, 'silent' => true],
 		'amount_debit' => ['type' => 'float', 'default' => null, 'silent' => true],
-		'authcode_credit' => ['type' => 'string', 'default' => null, 'silent' => true],
-		'authcode_debit' => ['type' => 'string', 'default' => null, 'silent' => true],
+		'auth_code_credit' => [
+			'type' => 'string', 'default' => null, 'silent' => true,
+			'read_as'=> 'authcode_credit', 'write_as'=> 'authcode_credit',
+		],
+		'auth_code_debit' => [
+			'type' => 'string', 'default' => null, 'silent' => true,
+			'read_as'=> 'authcode_debit', 'write_as'=> 'authcode_debit',
+		],
 		'card_token' => ['type' => 'string', 'default' => null, 'silent' => true],
 		'commission_credit' => ['type' => 'float', 'default' => 0.0, 'silent' => true],
 		'commission_debit' => ['type' => 'float', 'default' => 0.0, 'silent' => true],
@@ -209,7 +233,10 @@ return [
 		'product_name' => ['type' => 'string', 'default' => null, 'silent' => true],
 		'product_url' => ['type' => 'string', 'default' => null, 'silent' => true],
 		'refund_amount' => ['type' => 'float', 'default' => 0.0, 'silent' => true],
-		'verifycode' => ['type' => 'string', 'default' => null, 'silent' => true],
+		'verify_code' => [
+			'type' => 'string', 'default' => null, 'silent' => true,
+			'read_as'=> 'verifycode', 'write_as'=> 'verifycode',
+		],
 	],
 
 ];

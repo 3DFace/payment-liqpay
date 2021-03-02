@@ -4,14 +4,19 @@
 
 namespace dface\Payment\LiqPay;
 
-class RefundRequest implements \JsonSerializable {
+use JsonSerializable;
 
-	/** @var string */
-	private $order_id;
-	/** @var float */
-	private $amount;
+final class RefundRequest implements JsonSerializable {
 
-	public function __construct(string $order_id, float $amount){
+	private string $order_id;
+	private float $amount;
+	private bool $_dirty = false;
+
+	/**
+	 * @param string $order_id
+	 * @param float $amount
+	 */
+	public function __construct(string $order_id, float $amount) {
 		$this->order_id = $order_id;
 		$this->amount = $amount;
 	}
@@ -35,8 +40,12 @@ class RefundRequest implements \JsonSerializable {
 	 * @return self
 	 */
 	public function withOrderId(string $val) : self {
+		if ($this->order_id === $val) {
+			return $this;
+		}
 		$clone = clone $this;
 		$clone->order_id = $val;
+		$clone->_dirty = true;
 		return $clone;
 	}
 
@@ -45,15 +54,19 @@ class RefundRequest implements \JsonSerializable {
 	 * @return self
 	 */
 	public function withAmount(float $val) : self {
+		if ($this->amount === $val) {
+			return $this;
+		}
 		$clone = clone $this;
 		$clone->amount = $val;
+		$clone->_dirty = true;
 		return $clone;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function jsonSerialize(){
+	public function jsonSerialize() : array {
 
 		$result = [];
 
@@ -65,26 +78,53 @@ class RefundRequest implements \JsonSerializable {
 	}
 
 	/**
-	 * @param array $arr
+	 * @param object|array $data
 	 * @return self
 	 * @throws \InvalidArgumentException
 	 */
-	public static function deserialize(array $arr) : RefundRequest {
-		if(\array_key_exists('order_id', $arr)){
+	public static function deserialize($data) : self {
+		$arr = (array)$data;
+		if (\array_key_exists('order_id', $arr)) {
 			$order_id = $arr['order_id'];
-		}else{
+		} else {
 			throw new \InvalidArgumentException("Property 'order_id' not specified");
 		}
-		$order_id = $order_id !== null ? (string)$order_id : null;
+		$order_id = $order_id === null ? null : (string)$order_id;
 
-		if(\array_key_exists('amount', $arr)){
+		if (\array_key_exists('amount', $arr)) {
 			$amount = $arr['amount'];
-		}else{
+		} else {
 			throw new \InvalidArgumentException("Property 'amount' not specified");
 		}
-		$amount = $amount !== null ? (float)$amount : null;
+		$amount = $amount === null ? null : (float)$amount;
 
-		return new static($order_id, $amount);
+		return new self($order_id, $amount);
+	}
+
+	/**
+	 * @param self|null $x
+	 * @return bool
+	 */
+	public function equals(?self $x) : bool {
+
+		return $x !== null
+
+			&& $this->order_id === $x->order_id
+
+			&& $this->amount === $x->amount;
+	}
+
+	public function isDirty() : bool {
+		return $this->_dirty;
+	}
+
+	/**
+	 * @return self
+	 */
+	public function washed() : self {
+		$x = clone $this;
+		$x->_dirty = false;
+		return $x;
 	}
 
 }

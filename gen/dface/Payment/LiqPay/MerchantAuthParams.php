@@ -4,14 +4,19 @@
 
 namespace dface\Payment\LiqPay;
 
-class MerchantAuthParams implements \JsonSerializable {
+use JsonSerializable;
 
-	/** @var string|null */
-	private $public_key;
-	/** @var string|null */
-	private $private_key;
+final class MerchantAuthParams implements JsonSerializable {
 
-	public function __construct(?string $public_key = null, ?string $private_key = null){
+	private ?string $public_key;
+	private ?string $private_key;
+	private bool $_dirty = false;
+
+	/**
+	 * @param string|null $public_key
+	 * @param string|null $private_key
+	 */
+	public function __construct(?string $public_key = null, ?string $private_key = null) {
 		$this->public_key = $public_key;
 		$this->private_key = $private_key;
 	}
@@ -33,7 +38,7 @@ class MerchantAuthParams implements \JsonSerializable {
 	/**
 	 * @return mixed
 	 */
-	public function jsonSerialize(){
+	public function jsonSerialize() : array {
 
 		$result = [];
 
@@ -45,24 +50,45 @@ class MerchantAuthParams implements \JsonSerializable {
 	}
 
 	/**
-	 * @param array $arr
+	 * @param object|array $data
 	 * @return self
 	 * @throws \InvalidArgumentException
 	 */
-	public static function deserialize(array $arr) : MerchantAuthParams {
-		$public_key = null;
-		if(\array_key_exists('public_key', $arr)){
-			$public_key = $arr['public_key'];
-		}
-		$public_key = $public_key !== null ? (string)$public_key : null;
+	public static function deserialize($data) : self {
+		$arr = (array)$data;
+		$public_key = $arr['public_key'] ?? null;
+		$public_key = $public_key === null ? null : (string)$public_key;
 
-		$private_key = null;
-		if(\array_key_exists('private_key', $arr)){
-			$private_key = $arr['private_key'];
-		}
-		$private_key = $private_key !== null ? (string)$private_key : null;
+		$private_key = $arr['private_key'] ?? null;
+		$private_key = $private_key === null ? null : (string)$private_key;
 
-		return new static($public_key, $private_key);
+		return new self($public_key, $private_key);
+	}
+
+	/**
+	 * @param self|null $x
+	 * @return bool
+	 */
+	public function equals(?self $x) : bool {
+
+		return $x !== null
+
+			&& $this->public_key === $x->public_key
+
+			&& $this->private_key === $x->private_key;
+	}
+
+	public function isDirty() : bool {
+		return $this->_dirty;
+	}
+
+	/**
+	 * @return self
+	 */
+	public function washed() : self {
+		$x = clone $this;
+		$x->_dirty = false;
+		return $x;
 	}
 
 }

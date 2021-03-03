@@ -59,6 +59,7 @@ return [
 		'product_name' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 		'product_url' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 		'result_url' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
+		'phone' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 	],
 
 	'PaymentRequestSplitRule' => [

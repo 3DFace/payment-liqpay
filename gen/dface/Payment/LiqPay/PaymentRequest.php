@@ -41,6 +41,7 @@ final class PaymentRequest implements JsonSerializable {
 	private ?string $product_name;
 	private ?string $product_url;
 	private ?string $result_url;
+	private ?string $phone;
 	private bool $_dirty = false;
 
 	/**
@@ -77,6 +78,7 @@ final class PaymentRequest implements JsonSerializable {
 	 * @param string|null $product_name
 	 * @param string|null $product_url
 	 * @param string|null $result_url
+	 * @param string|null $phone
 	 */
 	public function __construct(
 		string $action,
@@ -111,7 +113,8 @@ final class PaymentRequest implements JsonSerializable {
 		?string $product_description = null,
 		?string $product_name = null,
 		?string $product_url = null,
-		?string $result_url = null
+		?string $result_url = null,
+		?string $phone = null
 	) {
 		$this->action = $action;
 		$this->amount = $amount;
@@ -146,6 +149,7 @@ final class PaymentRequest implements JsonSerializable {
 		$this->product_name = $product_name;
 		$this->product_url = $product_url;
 		$this->result_url = $result_url;
+		$this->phone = $phone;
 	}
 
 	/**
@@ -377,6 +381,13 @@ final class PaymentRequest implements JsonSerializable {
 	 */
 	public function getResultUrl() : ?string {
 		return $this->result_url;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getPhone() : ?string {
+		return $this->phone;
 	}
 
 	/**
@@ -828,6 +839,20 @@ final class PaymentRequest implements JsonSerializable {
 	}
 
 	/**
+	 * @param string|null $val
+	 * @return self
+	 */
+	public function withPhone(?string $val) : self {
+		if ($this->phone === $val) {
+			return $this;
+		}
+		$clone = clone $this;
+		$clone->phone = $val;
+		$clone->_dirty = true;
+		return $clone;
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function jsonSerialize() : array {
@@ -956,6 +981,10 @@ final class PaymentRequest implements JsonSerializable {
 
 		if ($this->result_url !== null) {
 			$result['result_url'] = $this->result_url;
+		}
+
+		if ($this->phone !== null) {
+			$result['phone'] = $this->phone;
 		}
 
 		return $result;
@@ -1089,6 +1118,9 @@ final class PaymentRequest implements JsonSerializable {
 		$result_url = $arr['result_url'] ?? null;
 		$result_url = $result_url === null ? null : (string)$result_url;
 
+		$phone = $arr['phone'] ?? null;
+		$phone = $phone === null ? null : (string)$phone;
+
 		return new self(
 			$action,
 			$amount,
@@ -1122,7 +1154,8 @@ final class PaymentRequest implements JsonSerializable {
 			$product_description,
 			$product_name,
 			$product_url,
-			$result_url);
+			$result_url,
+			$phone);
 	}
 
 	/**
@@ -1166,7 +1199,7 @@ final class PaymentRequest implements JsonSerializable {
 								return false;
 							}
 							$v2 = $arr2[$i];
-							$v_eq = $v1 == $v2;
+							$v_eq = $v1->equals($v2);
 							if (!$v_eq) {
 								return false;
 							}
@@ -1212,7 +1245,9 @@ final class PaymentRequest implements JsonSerializable {
 
 			&& $this->product_url === $x->product_url
 
-			&& $this->result_url === $x->result_url;
+			&& $this->result_url === $x->result_url
+
+			&& $this->phone === $x->phone;
 	}
 
 	public function isDirty() : bool {

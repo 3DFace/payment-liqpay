@@ -864,6 +864,20 @@ final class PaymentRequest implements JsonSerializable {
 	}
 
 	/**
+	 * @param string|null $val
+	 * @return self
+	 */
+	public function withCardToken(?string $val) : self {
+		if ($this->card_token === $val) {
+			return $this;
+		}
+		$clone = clone $this;
+		$clone->card_token = $val;
+		$clone->_dirty = true;
+		return $clone;
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function jsonSerialize() : array {

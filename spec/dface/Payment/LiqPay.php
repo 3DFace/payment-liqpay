@@ -60,7 +60,7 @@ return [
 		'product_url' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 		'result_url' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 		'phone' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
-		'card_token' => ['type' => 'string', 'default' => null, 'silent' => true],
+		'card_token' => ['type' => 'string', 'default' => null, 'silent' => true, 'with' => true],
 	],
 
 	'PaymentRequestSplitRule' => [

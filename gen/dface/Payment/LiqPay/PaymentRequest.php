@@ -42,6 +42,7 @@ final class PaymentRequest implements JsonSerializable {
 	private ?string $product_url;
 	private ?string $result_url;
 	private ?string $phone;
+	private ?string $card_token;
 	private bool $_dirty = false;
 
 	/**
@@ -79,6 +80,7 @@ final class PaymentRequest implements JsonSerializable {
 	 * @param string|null $product_url
 	 * @param string|null $result_url
 	 * @param string|null $phone
+	 * @param string|null $card_token
 	 */
 	public function __construct(
 		string $action,
@@ -114,7 +116,8 @@ final class PaymentRequest implements JsonSerializable {
 		?string $product_name = null,
 		?string $product_url = null,
 		?string $result_url = null,
-		?string $phone = null
+		?string $phone = null,
+		?string $card_token = null
 	) {
 		$this->action = $action;
 		$this->amount = $amount;
@@ -150,6 +153,7 @@ final class PaymentRequest implements JsonSerializable {
 		$this->product_url = $product_url;
 		$this->result_url = $result_url;
 		$this->phone = $phone;
+		$this->card_token = $card_token;
 	}
 
 	/**
@@ -388,6 +392,13 @@ final class PaymentRequest implements JsonSerializable {
 	 */
 	public function getPhone() : ?string {
 		return $this->phone;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getCardToken() : ?string {
+		return $this->card_token;
 	}
 
 	/**
@@ -987,6 +998,10 @@ final class PaymentRequest implements JsonSerializable {
 			$result['phone'] = $this->phone;
 		}
 
+		if ($this->card_token !== null) {
+			$result['card_token'] = $this->card_token;
+		}
+
 		return $result;
 	}
 
@@ -1121,6 +1136,9 @@ final class PaymentRequest implements JsonSerializable {
 		$phone = $arr['phone'] ?? null;
 		$phone = $phone === null ? null : (string)$phone;
 
+		$card_token = $arr['card_token'] ?? null;
+		$card_token = $card_token === null ? null : (string)$card_token;
+
 		return new self(
 			$action,
 			$amount,
@@ -1155,7 +1173,8 @@ final class PaymentRequest implements JsonSerializable {
 			$product_name,
 			$product_url,
 			$result_url,
-			$phone);
+			$phone,
+			$card_token);
 	}
 
 	/**
@@ -1247,7 +1266,9 @@ final class PaymentRequest implements JsonSerializable {
 
 			&& $this->result_url === $x->result_url
 
-			&& $this->phone === $x->phone;
+			&& $this->phone === $x->phone
+
+			&& $this->card_token === $x->card_token;
 	}
 
 	public function isDirty() : bool {

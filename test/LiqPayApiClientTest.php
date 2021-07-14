@@ -26,7 +26,7 @@ class LiqPayApiClientTest extends TestCase
 		};
 
 		$this->apiClient = new LiqPayApiClient(
-			'http://test.com', 3,
+			'http://localhost', 3,
 			$this->httpClient,
 			$reqFactory,
 			$this->stringStreamFactory,
@@ -62,6 +62,7 @@ class LiqPayApiClientTest extends TestCase
 		self::assertEquals('success', $res_arr['status']);
 	}
 
+	/** @noinspection PhpSameParameterValueInspection */
 	private function makeResponse($data) : Response
 	{
 		$res_body = \json_encode($data, JSON_THROW_ON_ERROR);

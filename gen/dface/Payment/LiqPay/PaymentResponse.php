@@ -314,121 +314,148 @@ final class PaymentResponse implements JsonSerializable {
 	}
 
 	/**
-	 * @return mixed
+	 * @return array|\stdClass
 	 */
-	public function jsonSerialize() : array {
+	public function jsonSerialize() {
 
 		$result = [];
 
-		if ($this->acq_id !== null) {
-			$result['acq_id'] = $this->acq_id;
+		$_ser_acq_id = $this->acq_id;
+		if ($_ser_acq_id !== null) {
+			$result['acq_id'] = $_ser_acq_id;
 		}
 
-		if ($this->action !== null) {
-			$result['action'] = $this->action;
+		$_ser_action = $this->action;
+		if ($_ser_action !== null) {
+			$result['action'] = $_ser_action;
 		}
 
-		if ($this->agent_commission !== 0.0) {
-			$result['agent_commission'] = $this->agent_commission;
+		$_ser_agent_commission = $this->agent_commission;
+		if ($_ser_agent_commission !== 0.0) {
+			$result['agent_commission'] = $_ser_agent_commission;
 		}
 
-		if ($this->amount !== null) {
-			$result['amount'] = $this->amount;
+		$_ser_amount = $this->amount;
+		if ($_ser_amount !== null) {
+			$result['amount'] = $_ser_amount;
 		}
 
-		if ($this->amount_bonus !== 0.0) {
-			$result['amount_bonus'] = $this->amount_bonus;
+		$_ser_amount_bonus = $this->amount_bonus;
+		if ($_ser_amount_bonus !== 0.0) {
+			$result['amount_bonus'] = $_ser_amount_bonus;
 		}
 
-		if ($this->amount_credit !== null) {
-			$result['amount_credit'] = $this->amount_credit;
+		$_ser_amount_credit = $this->amount_credit;
+		if ($_ser_amount_credit !== null) {
+			$result['amount_credit'] = $_ser_amount_credit;
 		}
 
-		if ($this->amount_debit !== null) {
-			$result['amount_debit'] = $this->amount_debit;
+		$_ser_amount_debit = $this->amount_debit;
+		if ($_ser_amount_debit !== null) {
+			$result['amount_debit'] = $_ser_amount_debit;
 		}
 
-		if ($this->commission_credit !== 0.0) {
-			$result['commission_credit'] = $this->commission_credit;
+		$_ser_commission_credit = $this->commission_credit;
+		if ($_ser_commission_credit !== 0.0) {
+			$result['commission_credit'] = $_ser_commission_credit;
 		}
 
-		if ($this->commission_debit !== 0.0) {
-			$result['commission_debit'] = $this->commission_debit;
+		$_ser_commission_debit = $this->commission_debit;
+		if ($_ser_commission_debit !== 0.0) {
+			$result['commission_debit'] = $_ser_commission_debit;
 		}
 
-		if ($this->currency !== null) {
-			$result['currency'] = $this->currency;
+		$_ser_currency = $this->currency;
+		if ($_ser_currency !== null) {
+			$result['currency'] = $_ser_currency;
 		}
 
-		if ($this->currency_credit !== null) {
-			$result['currency_credit'] = $this->currency_credit;
+		$_ser_currency_credit = $this->currency_credit;
+		if ($_ser_currency_credit !== null) {
+			$result['currency_credit'] = $_ser_currency_credit;
 		}
 
-		if ($this->currency_debit !== null) {
-			$result['currency_debit'] = $this->currency_debit;
+		$_ser_currency_debit = $this->currency_debit;
+		if ($_ser_currency_debit !== null) {
+			$result['currency_debit'] = $_ser_currency_debit;
 		}
 
-		if ($this->description !== null) {
-			$result['description'] = $this->description;
+		$_ser_description = $this->description;
+		if ($_ser_description !== null) {
+			$result['description'] = $_ser_description;
 		}
 
-		if ($this->is_3ds !== null) {
-			$result['is_3ds'] = $this->is_3ds;
+		$_ser_is_3ds = $this->is_3ds;
+		if ($_ser_is_3ds !== null) {
+			$result['is_3ds'] = $_ser_is_3ds;
 		}
 
-		if ($this->liq_pay_order_id !== null) {
-			$result['liq_pay_order_id'] = $this->liq_pay_order_id;
+		$_ser_liq_pay_order_id = $this->liq_pay_order_id;
+		if ($_ser_liq_pay_order_id !== null) {
+			$result['liq_pay_order_id'] = $_ser_liq_pay_order_id;
 		}
 
-		if ($this->mpi_eci !== null) {
-			$result['mpi_eci'] = $this->mpi_eci;
+		$_ser_mpi_eci = $this->mpi_eci;
+		if ($_ser_mpi_eci !== null) {
+			$result['mpi_eci'] = $_ser_mpi_eci;
 		}
 
-		if ($this->order_id !== null) {
-			$result['order_id'] = $this->order_id;
+		$_ser_order_id = $this->order_id;
+		if ($_ser_order_id !== null) {
+			$result['order_id'] = $_ser_order_id;
 		}
 
-		if ($this->payment_id !== null) {
-			$result['payment_id'] = $this->payment_id;
+		$_ser_payment_id = $this->payment_id;
+		if ($_ser_payment_id !== null) {
+			$result['payment_id'] = $_ser_payment_id;
 		}
 
-		if ($this->public_key !== null) {
-			$result['public_key'] = $this->public_key;
+		$_ser_public_key = $this->public_key;
+		if ($_ser_public_key !== null) {
+			$result['public_key'] = $_ser_public_key;
 		}
 
-		if ($this->qr_code !== null) {
-			$result['qr_code'] = $this->qr_code;
+		$_ser_qr_code = $this->qr_code;
+		if ($_ser_qr_code !== null) {
+			$result['qr_code'] = $_ser_qr_code;
 		}
 
-		if ($this->receiver_commission !== 0.0) {
-			$result['receiver_commission'] = $this->receiver_commission;
+		$_ser_receiver_commission = $this->receiver_commission;
+		if ($_ser_receiver_commission !== 0.0) {
+			$result['receiver_commission'] = $_ser_receiver_commission;
 		}
 
-		if ($this->sender_bonus !== 0.0) {
-			$result['sender_bonus'] = $this->sender_bonus;
+		$_ser_sender_bonus = $this->sender_bonus;
+		if ($_ser_sender_bonus !== 0.0) {
+			$result['sender_bonus'] = $_ser_sender_bonus;
 		}
 
-		if ($this->sender_commission !== 0.0) {
-			$result['sender_commission'] = $this->sender_commission;
+		$_ser_sender_commission = $this->sender_commission;
+		if ($_ser_sender_commission !== 0.0) {
+			$result['sender_commission'] = $_ser_sender_commission;
 		}
 
-		if ($this->status !== null) {
-			$result['status'] = $this->status;
+		$_ser_status = $this->status;
+		if ($_ser_status !== null) {
+			$result['status'] = $_ser_status;
 		}
 
-		if ($this->transaction_id !== null) {
-			$result['transaction_id'] = $this->transaction_id;
+		$_ser_transaction_id = $this->transaction_id;
+		if ($_ser_transaction_id !== null) {
+			$result['transaction_id'] = $_ser_transaction_id;
 		}
 
-		if ($this->type !== null) {
-			$result['type'] = $this->type;
+		$_ser_type = $this->type;
+		if ($_ser_type !== null) {
+			$result['type'] = $_ser_type;
 		}
 
-		if ($this->version !== null) {
-			$result['version'] = $this->version;
+		$_ser_version = $this->version;
+		if ($_ser_version !== null) {
+			$result['version'] = $_ser_version;
 		}
 
-		return $result;
+		return $result ?: new \stdClass();
 	}
 
 	/**
@@ -646,6 +673,9 @@ final class PaymentResponse implements JsonSerializable {
 	 * @return self
 	 */
 	public function washed() : self {
+		if (!$this->_dirty) {
+			return $this;
+		}
 		$x = clone $this;
 		$x->_dirty = false;
 		return $x;

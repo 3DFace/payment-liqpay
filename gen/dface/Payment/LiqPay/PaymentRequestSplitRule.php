@@ -75,9 +75,9 @@ final class PaymentRequestSplitRule implements JsonSerializable {
 	}
 
 	/**
-	 * @return mixed
+	 * @return array|\stdClass
 	 */
-	public function jsonSerialize() : array {
+	public function jsonSerialize() {
 
 		$result = [];
 
@@ -87,11 +87,12 @@ final class PaymentRequestSplitRule implements JsonSerializable {
 
 		$result['commission_payer'] = $this->commission_payer;
 
-		if ($this->server_url !== null) {
-			$result['server_url'] = $this->server_url;
+		$_ser_server_url = $this->server_url;
+		if ($_ser_server_url !== null) {
+			$result['server_url'] = $_ser_server_url;
 		}
 
-		return $result;
+		return $result ?: new \stdClass();
 	}
 
 	/**
@@ -157,6 +158,9 @@ final class PaymentRequestSplitRule implements JsonSerializable {
 	 * @return self
 	 */
 	public function washed() : self {
+		if (!$this->_dirty) {
+			return $this;
+		}
 		$x = clone $this;
 		$x->_dirty = false;
 		return $x;

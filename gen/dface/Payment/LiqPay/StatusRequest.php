@@ -40,15 +40,15 @@ final class StatusRequest implements JsonSerializable {
 	}
 
 	/**
-	 * @return mixed
+	 * @return array|\stdClass
 	 */
-	public function jsonSerialize() : array {
+	public function jsonSerialize() {
 
 		$result = [];
 
 		$result['order_id'] = $this->order_id;
 
-		return $result;
+		return $result ?: new \stdClass();
 	}
 
 	/**
@@ -87,6 +87,9 @@ final class StatusRequest implements JsonSerializable {
 	 * @return self
 	 */
 	public function washed() : self {
+		if (!$this->_dirty) {
+			return $this;
+		}
 		$x = clone $this;
 		$x->_dirty = false;
 		return $x;

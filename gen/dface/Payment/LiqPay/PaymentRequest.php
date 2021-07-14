@@ -878,9 +878,9 @@ final class PaymentRequest implements JsonSerializable {
 	}
 
 	/**
-	 * @return mixed
+	 * @return array|\stdClass
 	 */
-	public function jsonSerialize() : array {
+	public function jsonSerialize() {
 
 		$result = [];
 
@@ -894,129 +894,159 @@ final class PaymentRequest implements JsonSerializable {
 
 		$result['order_id'] = $this->order_id;
 
-		if ($this->language !== null) {
-			$result['language'] = $this->language;
+		$_ser_language = $this->language;
+		if ($_ser_language !== null) {
+			$result['language'] = $_ser_language;
 		}
 
-		if ($this->ip !== null) {
-			$result['ip'] = $this->ip;
+		$_ser_ip = $this->ip;
+		if ($_ser_ip !== null) {
+			$result['ip'] = $_ser_ip;
 		}
 
-		if ($this->expired_date !== null) {
-			$result['expired_date'] = $this->expired_date;
+		$_ser_expired_date = $this->expired_date;
+		if ($_ser_expired_date !== null) {
+			$result['expired_date'] = $_ser_expired_date;
 		}
 
-		if ($this->pay_types !== null) {
-			$result['paytypes'] = $this->pay_types;
+		$_ser_pay_types = $this->pay_types;
+		if ($_ser_pay_types !== null) {
+			$result['paytypes'] = $_ser_pay_types;
 		}
 
-		if ($this->recurring_by_token !== null) {
-			$result['recurringbytoken'] = $this->recurring_by_token;
+		$_ser_recurring_by_token = $this->recurring_by_token;
+		if ($_ser_recurring_by_token !== null) {
+			$result['recurringbytoken'] = $_ser_recurring_by_token;
 		}
 
-		if ($this->server_url !== null) {
-			$result['server_url'] = $this->server_url;
+		$_ser_server_url = $this->server_url;
+		if ($_ser_server_url !== null) {
+			$result['server_url'] = $_ser_server_url;
 		}
 
-		if ($this->verify_code !== null) {
-			$result['verifycode'] = $this->verify_code;
+		$_ser_verify_code = $this->verify_code;
+		if ($_ser_verify_code !== null) {
+			$result['verifycode'] = $_ser_verify_code;
 		}
 
-		if ($this->split_rules !== null) {
-			$result['split_rules'] = $this->split_rules === null ? null : \array_map(static function (PaymentRequestSplitRule $x) {
-				return $x->jsonSerialize();
-			}, $this->split_rules);
+		$_ser_split_rules = $this->split_rules === null ? null : \array_map(static function (PaymentRequestSplitRule $x) {
+			return $x->jsonSerialize();
+		}, $this->split_rules);
+		if ($_ser_split_rules !== null) {
+			$result['split_rules'] = $_ser_split_rules;
 		}
 
-		if ($this->sender_address !== null) {
-			$result['sender_address'] = $this->sender_address;
+		$_ser_sender_address = $this->sender_address;
+		if ($_ser_sender_address !== null) {
+			$result['sender_address'] = $_ser_sender_address;
 		}
 
-		if ($this->sender_city !== null) {
-			$result['sender_city'] = $this->sender_city;
+		$_ser_sender_city = $this->sender_city;
+		if ($_ser_sender_city !== null) {
+			$result['sender_city'] = $_ser_sender_city;
 		}
 
-		if ($this->sender_country_code !== null) {
-			$result['sender_country_code'] = $this->sender_country_code;
+		$_ser_sender_country_code = $this->sender_country_code;
+		if ($_ser_sender_country_code !== null) {
+			$result['sender_country_code'] = $_ser_sender_country_code;
 		}
 
-		if ($this->sender_first_name !== null) {
-			$result['sender_first_name'] = $this->sender_first_name;
+		$_ser_sender_first_name = $this->sender_first_name;
+		if ($_ser_sender_first_name !== null) {
+			$result['sender_first_name'] = $_ser_sender_first_name;
 		}
 
-		if ($this->sender_last_name !== null) {
-			$result['sender_last_name'] = $this->sender_last_name;
+		$_ser_sender_last_name = $this->sender_last_name;
+		if ($_ser_sender_last_name !== null) {
+			$result['sender_last_name'] = $_ser_sender_last_name;
 		}
 
-		if ($this->sender_postal_code !== null) {
-			$result['sender_postal_code'] = $this->sender_postal_code;
+		$_ser_sender_postal_code = $this->sender_postal_code;
+		if ($_ser_sender_postal_code !== null) {
+			$result['sender_postal_code'] = $_ser_sender_postal_code;
 		}
 
-		if ($this->letter_of_credit !== null) {
-			$result['letter_of_credit'] = $this->letter_of_credit;
+		$_ser_letter_of_credit = $this->letter_of_credit;
+		if ($_ser_letter_of_credit !== null) {
+			$result['letter_of_credit'] = $_ser_letter_of_credit;
 		}
 
-		if ($this->letter_of_credit_date !== null) {
-			$result['letter_of_credit_date'] = $this->letter_of_credit_date;
+		$_ser_letter_of_credit_date = $this->letter_of_credit_date;
+		if ($_ser_letter_of_credit_date !== null) {
+			$result['letter_of_credit_date'] = $_ser_letter_of_credit_date;
 		}
 
-		if ($this->subscribe !== null) {
-			$result['subscribe'] = $this->subscribe;
+		$_ser_subscribe = $this->subscribe;
+		if ($_ser_subscribe !== null) {
+			$result['subscribe'] = $_ser_subscribe;
 		}
 
-		if ($this->subscribe_date_start !== null) {
-			$result['subscribe_date_start'] = $this->subscribe_date_start;
+		$_ser_subscribe_date_start = $this->subscribe_date_start;
+		if ($_ser_subscribe_date_start !== null) {
+			$result['subscribe_date_start'] = $_ser_subscribe_date_start;
 		}
 
-		if ($this->subscribe_periodicity !== null) {
-			$result['subscribe_periodicity'] = $this->subscribe_periodicity;
+		$_ser_subscribe_periodicity = $this->subscribe_periodicity;
+		if ($_ser_subscribe_periodicity !== null) {
+			$result['subscribe_periodicity'] = $_ser_subscribe_periodicity;
 		}
 
-		if ($this->customer !== null) {
-			$result['customer'] = $this->customer;
+		$_ser_customer = $this->customer;
+		if ($_ser_customer !== null) {
+			$result['customer'] = $_ser_customer;
 		}
 
-		if ($this->customer_user_id !== null) {
-			$result['customer_user_id'] = $this->customer_user_id;
+		$_ser_customer_user_id = $this->customer_user_id;
+		if ($_ser_customer_user_id !== null) {
+			$result['customer_user_id'] = $_ser_customer_user_id;
 		}
 
-		if ($this->dae !== null) {
-			$result['dae'] = $this->dae;
+		$_ser_dae = $this->dae;
+		if ($_ser_dae !== null) {
+			$result['dae'] = $_ser_dae;
 		}
 
-		if ($this->info !== null) {
-			$result['info'] = $this->info;
+		$_ser_info = $this->info;
+		if ($_ser_info !== null) {
+			$result['info'] = $_ser_info;
 		}
 
-		if ($this->product_category !== null) {
-			$result['product_category'] = $this->product_category;
+		$_ser_product_category = $this->product_category;
+		if ($_ser_product_category !== null) {
+			$result['product_category'] = $_ser_product_category;
 		}
 
-		if ($this->product_description !== null) {
-			$result['product_description'] = $this->product_description;
+		$_ser_product_description = $this->product_description;
+		if ($_ser_product_description !== null) {
+			$result['product_description'] = $_ser_product_description;
 		}
 
-		if ($this->product_name !== null) {
-			$result['product_name'] = $this->product_name;
+		$_ser_product_name = $this->product_name;
+		if ($_ser_product_name !== null) {
+			$result['product_name'] = $_ser_product_name;
 		}
 
-		if ($this->product_url !== null) {
-			$result['product_url'] = $this->product_url;
+		$_ser_product_url = $this->product_url;
+		if ($_ser_product_url !== null) {
+			$result['product_url'] = $_ser_product_url;
 		}
 
-		if ($this->result_url !== null) {
-			$result['result_url'] = $this->result_url;
+		$_ser_result_url = $this->result_url;
+		if ($_ser_result_url !== null) {
+			$result['result_url'] = $_ser_result_url;
 		}
 
-		if ($this->phone !== null) {
-			$result['phone'] = $this->phone;
+		$_ser_phone = $this->phone;
+		if ($_ser_phone !== null) {
+			$result['phone'] = $_ser_phone;
 		}
 
-		if ($this->card_token !== null) {
-			$result['card_token'] = $this->card_token;
+		$_ser_card_token = $this->card_token;
+		if ($_ser_card_token !== null) {
+			$result['card_token'] = $_ser_card_token;
 		}
 
-		return $result;
+		return $result ?: new \stdClass();
 	}
 
 	/**
@@ -1293,6 +1323,9 @@ final class PaymentRequest implements JsonSerializable {
 	 * @return self
 	 */
 	public function washed() : self {
+		if (!$this->_dirty) {
+			return $this;
+		}
 		$x = clone $this;
 		$x->_dirty = false;
 		return $x;

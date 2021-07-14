@@ -61,27 +61,30 @@ final class RefundResponse implements JsonSerializable {
 	}
 
 	/**
-	 * @return mixed
+	 * @return array|\stdClass
 	 */
-	public function jsonSerialize() : array {
+	public function jsonSerialize() {
 
 		$result = [];
 
 		$result['status'] = $this->status;
 
-		if ($this->action !== null) {
-			$result['action'] = $this->action;
+		$_ser_action = $this->action;
+		if ($_ser_action !== null) {
+			$result['action'] = $_ser_action;
 		}
 
-		if ($this->payment_id !== null) {
-			$result['payment_id'] = $this->payment_id;
+		$_ser_payment_id = $this->payment_id;
+		if ($_ser_payment_id !== null) {
+			$result['payment_id'] = $_ser_payment_id;
 		}
 
-		if ($this->wait_amount !== null) {
-			$result['wait_amount'] = $this->wait_amount;
+		$_ser_wait_amount = $this->wait_amount;
+		if ($_ser_wait_amount !== null) {
+			$result['wait_amount'] = $_ser_wait_amount;
 		}
 
-		return $result;
+		return $result ?: new \stdClass();
 	}
 
 	/**
@@ -139,6 +142,9 @@ final class RefundResponse implements JsonSerializable {
 	 * @return self
 	 */
 	public function washed() : self {
+		if (!$this->_dirty) {
+			return $this;
+		}
 		$x = clone $this;
 		$x->_dirty = false;
 		return $x;

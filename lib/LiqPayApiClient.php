@@ -4,7 +4,7 @@ namespace dface\Payment\LiqPay;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 class LiqPayApiClient
@@ -13,7 +13,7 @@ class LiqPayApiClient
 	private string $api_url;
 	private float $version;
 	private ClientInterface $httpClient;
-	private ServerRequestFactoryInterface $requestFactory;
+	private RequestFactoryInterface $requestFactory;
 	/** @var callable */
 	private $stringStreamFactory;
 	private LoggerInterface $logger;
@@ -22,7 +22,7 @@ class LiqPayApiClient
 		string $api_url,
 		float $version,
 		ClientInterface $httpClient,
-		ServerRequestFactoryInterface $requestFactory,
+		RequestFactoryInterface $requestFactory,
 		callable $stringStreamFactory,
 		LoggerInterface $logger
 	) {
@@ -49,7 +49,7 @@ class LiqPayApiClient
 		$private_key = $auth->getPrivateKey();
 		$request_arr = self::buildDataAndSignature($data_arr, $private_key);
 		$request_param_str = \http_build_query($request_arr);
-		$request = $this->requestFactory->createServerRequest('POST', $this->api_url);
+		$request = $this->requestFactory->createRequest('POST', $this->api_url);
 		$body_stream = ($this->stringStreamFactory)($request_param_str);
 		$request = $request
 			->withHeader('Content-Type', 'application/x-www-form-urlencoded')

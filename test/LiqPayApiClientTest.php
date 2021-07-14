@@ -20,7 +20,7 @@ class LiqPayApiClientTest extends TestCase
 	{
 		parent::setUp();
 		$this->httpClient = new TestHttpClient();
-		$reqFactory = new GuzzleServerRequestFactory();
+		$reqFactory = new GuzzleRequestFactory();
 		$this->stringStreamFactory = static function ($str) {
 			return Utils::streamFor($str);
 		};

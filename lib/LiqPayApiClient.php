@@ -113,10 +113,7 @@ class LiqPayApiClient
 	 */
 	public function buildRequest(array $data_arr, MerchantAuthParams $auth) : array
 	{
-		$data_arr['version'] = $this->version;
-		$data_arr['public_key'] = $auth->getPublicKey();
-		$private_key = $auth->getPrivateKey();
-		return self::buildDataAndSignature($data_arr, $private_key);
+		return LiqPaySign::buildRequest($this->version, $data_arr, $auth);
 	}
 
 	/**

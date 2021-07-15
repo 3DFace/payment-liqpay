@@ -2,10 +2,11 @@
 
 namespace dface\Payment\LiqPay;
 
+use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Utils;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\NullLogger;
 
 class LiqPayApiClientTest extends TestCase
@@ -14,22 +15,20 @@ class LiqPayApiClientTest extends TestCase
 	private LiqPayApiClient $apiClient;
 	private TestHttpClient $httpClient;
 	private MerchantAuthParams $auth;
-	private \Closure $stringStreamFactory;
+	private StreamFactoryInterface $streamFactory;
 
 	protected function setUp() : void
 	{
 		parent::setUp();
 		$this->httpClient = new TestHttpClient();
 		$reqFactory = new GuzzleRequestFactory();
-		$this->stringStreamFactory = static function ($str) {
-			return Utils::streamFor($str);
-		};
+		$this->streamFactory = new HttpFactory();
 
 		$this->apiClient = new LiqPayApiClient(
 			'http://localhost', 3,
 			$this->httpClient,
 			$reqFactory,
-			$this->stringStreamFactory,
+			$this->streamFactory,
 			new NullLogger());
 		$this->auth = new MerchantAuthParams('test_public', 'test_private');
 	}
@@ -66,7 +65,7 @@ class LiqPayApiClientTest extends TestCase
 	private function makeResponse($data) : Response
 	{
 		$res_body = \json_encode($data, JSON_THROW_ON_ERROR);
-		return new Response(200, [], ($this->stringStreamFactory)($res_body));
+		return new Response(200, [], $this->streamFactory->createStream($res_body));
 	}
 
 	private function fetchDataFromRequest(RequestInterface $sent_req)

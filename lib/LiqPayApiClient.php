@@ -5,6 +5,7 @@ namespace dface\Payment\LiqPay;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 class LiqPayApiClient
@@ -14,8 +15,7 @@ class LiqPayApiClient
 	private float $version;
 	private ClientInterface $httpClient;
 	private RequestFactoryInterface $requestFactory;
-	/** @var callable */
-	private $stringStreamFactory;
+	private StreamFactoryInterface $streamFactory;
 	private LoggerInterface $logger;
 
 	public function __construct(
@@ -23,14 +23,14 @@ class LiqPayApiClient
 		float $version,
 		ClientInterface $httpClient,
 		RequestFactoryInterface $requestFactory,
-		callable $stringStreamFactory,
+		StreamFactoryInterface $streamFactory,
 		LoggerInterface $logger
 	) {
 		$this->api_url = $api_url;
 		$this->version = $version;
 		$this->httpClient = $httpClient;
 		$this->requestFactory = $requestFactory;
-		$this->stringStreamFactory = $stringStreamFactory;
+		$this->streamFactory = $streamFactory;
 		$this->logger = $logger;
 	}
 
@@ -50,7 +50,7 @@ class LiqPayApiClient
 		$request_arr = self::buildDataAndSignature($data_arr, $private_key);
 		$request_param_str = \http_build_query($request_arr);
 		$request = $this->requestFactory->createRequest('POST', $this->api_url);
-		$body_stream = ($this->stringStreamFactory)($request_param_str);
+		$body_stream = $this->streamFactory->createStream($request_param_str);
 		$request = $request
 			->withHeader('Content-Type', 'application/x-www-form-urlencoded')
 			->withBody($body_stream);

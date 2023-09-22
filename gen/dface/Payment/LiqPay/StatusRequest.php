@@ -42,6 +42,7 @@ final class StatusRequest implements JsonSerializable {
 	/**
 	 * @return array|\stdClass
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 
 		$result = [];

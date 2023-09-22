@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         bootstrap="bootstrap.php"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-    <coverage>
-        <include>
-            <directory>lib/</directory>
-        </include>
-    </coverage>
-    <testsuites>
-        <testsuite name="Unit Tests">
-            <directory phpVersion="7.4.0">tests/</directory>
-        </testsuite>
-    </testsuites>
-    <extensions>
-        <extension class="dface\PhpunitCustomization\ComparatorExtension"/>
-    </extensions>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="bootstrap.php"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd" cacheDirectory=".phpunit.cache">
+  <coverage/>
+  <testsuites>
+    <testsuite name="Unit Tests">
+      <directory phpVersion="8.2.5">tests/</directory>
+    </testsuite>
+  </testsuites>
+  <extensions>
+    <bootstrap class="dface\PhpunitCustomization\ComparatorExtension"/>
+  </extensions>
+  <source>
+    <include>
+      <directory>lib/</directory>
+    </include>
+  </source>
 </phpunit>

@@ -313,11 +313,7 @@ final class PaymentResponse implements JsonSerializable {
 		return $this->version;
 	}
 
-	/**
-	 * @return array|\stdClass
-	 */
-	#[\ReturnTypeWillChange]
-	public function jsonSerialize() {
+	public function jsonSerialize() : array|object {
 
 		$result = [];
 
@@ -464,7 +460,7 @@ final class PaymentResponse implements JsonSerializable {
 	 * @return self
 	 * @throws \InvalidArgumentException
 	 */
-	public static function deserialize($data) : self {
+	public static function deserialize(object|array $data) : self {
 		$arr = (array)$data;
 		$acq_id = $arr['acq_id'] ?? null;
 		$acq_id = $acq_id === null ? null : (float)$acq_id;

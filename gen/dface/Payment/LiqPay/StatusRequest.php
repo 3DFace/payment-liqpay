@@ -39,11 +39,7 @@ final class StatusRequest implements JsonSerializable {
 		return $clone;
 	}
 
-	/**
-	 * @return array|\stdClass
-	 */
-	#[\ReturnTypeWillChange]
-	public function jsonSerialize() {
+	public function jsonSerialize() : array|object {
 
 		$result = [];
 
@@ -57,7 +53,7 @@ final class StatusRequest implements JsonSerializable {
 	 * @return self
 	 * @throws \InvalidArgumentException
 	 */
-	public static function deserialize($data) : self {
+	public static function deserialize(object|array $data) : self {
 		$arr = (array)$data;
 		if (\array_key_exists('order_id', $arr)) {
 			$order_id = $arr['order_id'];
